@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+/* Design tokens */
+:root {
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+}
+
+/* Base resets and typography */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, 'Helvetica Neue', Arial, sans-serif; }
+
+/* Utility classes */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }

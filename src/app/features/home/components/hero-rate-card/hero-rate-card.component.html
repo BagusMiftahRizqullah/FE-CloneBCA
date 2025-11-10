@@ -1,0 +1,26 @@
+<section class="hero-rate" aria-label="Kurs eRate BCA">
+  <h3 class="hero-rate__title">Kurs eRate<br />BCA</h3>
+
+  <div class="hero-rate__currency" role="group" aria-label="Pilih mata uang">
+    <button class="hero-rate__chev" (click)="prev()" aria-label="Sebelumnya">‹</button>
+    <span class="hero-rate__flag" *ngIf="selected.flagSrc">
+      <img [src]="selected.flagSrc" alt="" />
+    </span>
+    <span class="hero-rate__code">{{ selected.code }}</span>
+    <button class="hero-rate__chev" (click)="next()" aria-label="Berikutnya">›</button>
+  </div>
+
+  <div class="hero-rate__row">
+    <span class="hero-rate__label">Beli</span>
+    <span class="hero-rate__value">{{ format(selected.buy) }}</span>
+  </div>
+
+  <div class="hero-rate__divider" aria-hidden="true"></div>
+
+  <div class="hero-rate__row">
+    <span class="hero-rate__label">Jual</span>
+    <span class="hero-rate__value">{{ format(selected.sell) }}</span>
+  </div>
+
+  <p class="hero-rate__note">Kurs dapat berubah selama proses transaksi.</p>
+</section>

@@ -1,0 +1,17 @@
+<section class="news" aria-label="Berita dan Pengumuman">
+  <mat-card class="news__card">
+    <mat-tab-group>
+      <mat-tab label="Berita">
+        <div class="news__list" role="list">
+          <div role="listitem" class="news__item" *ngFor="let n of news">
+            <span class="news__date" aria-hidden="true">{{ n.date }}</span>
+            <a href="#" class="news__link">{{ n.title }}</a>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Promo">
+        <div class="news__empty">Tidak ada promo saat ini.</div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</section>

@@ -1,0 +1,10 @@
+.news {
+  padding: 32px 16px;
+
+  &__card { max-width: 1200px; margin: 0 auto; }
+  &__list { display: grid; gap: 12px; padding: 12px; }
+  &__item { display: flex; gap: 12px; align-items: center; }
+  &__date { color: #888; font-size: 12px; }
+  &__link { color: #1976d2; }
+  &__empty { padding: 16px; color: #666; }
+}

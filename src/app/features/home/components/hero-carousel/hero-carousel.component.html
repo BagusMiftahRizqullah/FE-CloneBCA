@@ -1,0 +1,32 @@
+<div class="hero-carousel" role="region" aria-label="Promo carousel">
+  <button class="hero-carousel__nav hero-carousel__nav--prev" (click)="prev()" aria-label="Sebelumnya">
+    <span class="hero-carousel__chev">‹</span>
+  </button>
+
+  <div class="hero-carousel__viewport">
+    <div class="hero-carousel__track" [style.transform]="'translateX(' + (-index * 100) + '%)'">
+      <div class="hero-carousel__slide" *ngFor="let s of slides; let i = index" [attr.aria-hidden]="i !== index">
+        <img [src]="s.src" [alt]="s.alt" loading="lazy" decoding="async" />
+        <div class="hero-carousel__caption" *ngIf="s.title || s.subtitle">
+          <div class="hero-carousel__tag" *ngIf="s.title">{{ s.title }}</div>
+          <div class="hero-carousel__title" *ngIf="s.subtitle">{{ s.subtitle }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="hero-carousel__nav hero-carousel__nav--next" (click)="next()" aria-label="Berikutnya">
+    <span class="hero-carousel__chev">›</span>
+  </button>
+
+  <div class="hero-carousel__dots" role="tablist" aria-label="Indikator slide">
+    <button
+      class="hero-carousel__dot"
+      *ngFor="let s of slides; let i = index"
+      [class.is-active]="i === index"
+      (click)="go(i)"
+      [attr.aria-selected]="i === index"
+      [attr.aria-label]="'Ke slide ' + (i + 1)"
+    ></button>
+  </div>
+</div>

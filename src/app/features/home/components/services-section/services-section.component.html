@@ -1,0 +1,10 @@
+<section class="services" id="produk" aria-label="Produk dan Layanan">
+  <div class="services__grid">
+    <mat-card class="services__card" *ngFor="let s of services">
+      <mat-icon aria-hidden="true">{{ s.icon }}</mat-icon>
+      <h3 class="services__title">{{ s.title }}</h3>
+      <p class="services__desc">{{ s.description }}</p>
+      <button mat-button color="primary" [attr.aria-label]="'Pelajari ' + s.title">Pelajari</button>
+    </mat-card>
+  </div>
+</section>

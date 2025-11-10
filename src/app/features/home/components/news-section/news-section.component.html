@@ -1,0 +1,47 @@
+<section class="news" aria-labelledby="news-heading">
+  <div class="news__header">
+    <h2 id="news-heading" class="news__title">News &amp; Features</h2>
+    <nav class="news-tabs" role="tablist" aria-label="Kategori berita">
+      <button
+        *ngFor="let tab of tabs; let i = index"
+        class="news-tab"
+        role="tab"
+        [attr.aria-selected]="tab === activeTab"
+        [attr.tabindex]="tab === activeTab ? 0 : -1"
+        [class.is-active]="tab === activeTab"
+      >
+        {{ tab }}
+      </button>
+    </nav>
+    <a class="news__cta" href="#" [attr.aria-label]="'Semua News & Features'">
+      Semua News &amp; Features
+      <span aria-hidden="true" class="news__cta-icon">›</span>
+    </a>
+  </div>
+
+  <div class="news__grid" role="list">
+    <article class="news-card news-card--featured" role="listitem">
+      <a class="news-card__link" [href]="featured.href" [attr.aria-label]="featured.title">
+        <div class="news-card__media">
+          <img [src]="featured.img" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="news-card__meta">
+          <span class="news-card__date">{{ featured.date }}</span>
+        </div>
+        <h3 class="news-card__title">{{ featured.title }}</h3>
+      </a>
+    </article>
+
+    <article class="news-card" role="listitem" *ngFor="let item of items">
+      <a class="news-card__link" [href]="item.href" [attr.aria-label]="item.title">
+        <div class="news-card__media news-card__media--sm">
+          <img [src]="item.img" alt="" loading="lazy" decoding="async" />
+        </div>
+        <div class="news-card__content">
+          <span class="news-card__date">{{ item.date }}</span>
+          <h3 class="news-card__title news-card__title--sm">{{ item.title }}</h3>
+        </div>
+      </a>
+    </article>
+  </div>
+</section>

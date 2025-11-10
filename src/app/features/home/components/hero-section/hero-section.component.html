@@ -1,0 +1,26 @@
+<section class="hero" aria-label="Hero">
+  <!-- Responsive background image with lazy loading and alt text -->
+  <picture class="hero__bg" aria-hidden="true">
+    <source srcset="https://www.bca.co.id/homepage/assets/images/homepage/bg-mobile.jpg" media="(max-width: 767.98px)" type="image/jpeg" />
+    <source srcset="https://www.bca.co.id/homepage/assets/images/homepage/bg-desktop.jpg" media="(min-width: 768px)" type="image/jpeg" />
+    <img
+      src="https://www.bca.co.id/homepage/assets/images/homepage/bg-desktop.jpg"
+      alt="Background lifestyle imagery for BCA hero"
+      decoding="async"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </picture>
+
+  <div class="hero__overlay">
+    <div class="hero__overlay-center">
+      <!-- Search component di bagian tengah hero -->
+      <app-hero-search></app-hero-search>
+      <!-- Baris konten: carousel di kiri, kartu kurs di kanan -->
+      <div class="hero__content-row">
+        <app-hero-carousel></app-hero-carousel>
+        <app-hero-rate-card></app-hero-rate-card>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,67 @@
+.promo {
+  --promo-bg: #f3f7fb; /* light brand-friendly background */
+  --promo-primary: #0f5aa6; /* BCA blue */
+  --promo-text: #1f2a37;
+  --promo-muted: #6b7280;
+
+  background: var(--promo-bg);
+  /* Increase horizontal padding to make the component visually smaller */
+  padding: clamp(20px, 4vw, 40px) clamp(24px, 8vw, 96px);
+}
+
+.promo__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+  /* Center content and constrain width */
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.promo__title { font-size: clamp(20px, 3.2vw, 28px); font-weight: 700; color: var(--promo-text); }
+.promo__cta { display: inline-flex; align-items: center; gap: 8px; color: var(--promo-primary); text-decoration: none; font-weight: 600; }
+.promo__cta:hover { text-decoration: underline; }
+.promo__cta-icon { font-size: 20px; line-height: 1; }
+
+.promo__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(12px, 2vw, 18px);
+  /* Center grid and constrain width */
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.promo-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  overflow: hidden;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  animation: promo-fade-up 420ms ease both;
+}
+.promo-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+
+.promo-card__media { aspect-ratio: 16/9; overflow: hidden; }
+.promo-card__media img { width: 100%; height: 100%; object-fit: cover; transition: transform 320ms ease; }
+.promo-card:hover .promo-card__media img { transform: scale(1.05); }
+
+.promo-card__body { padding: 12px; }
+.promo-card__title { font-size: clamp(14px, 1.8vw, 16px); font-weight: 600; color: var(--promo-text); margin: 0 0 6px 0; }
+.promo-card__period { font-size: 12px; color: var(--promo-muted); margin: 0; }
+
+@keyframes promo-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1024px) {
+  .promo__grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .promo__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .promo__grid { grid-template-columns: 1fr; }
+}

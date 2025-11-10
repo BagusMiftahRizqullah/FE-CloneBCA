@@ -1,0 +1,18 @@
+<section class="promo" aria-label="Promo Terbaru">
+  <div class="promo__header">
+    <h2 class="promo__title">{{ heading }}</h2>
+    <a class="promo__cta" [href]="ctaHref" [attr.aria-label]="ctaLabel">{{ ctaLabel }}<span class="promo__cta-icon">›</span></a>
+  </div>
+
+  <div class="promo__grid">
+    <article class="promo-card" *ngFor="let p of promos; let i = index" [style.animationDelay]="(i * 60) + 'ms'">
+      <div class="promo-card__media">
+        <img [src]="p.img" [alt]="p.title" loading="lazy" decoding="async" />
+      </div>
+      <div class="promo-card__body">
+        <h3 class="promo-card__title">{{ p.title }}</h3>
+        <p class="promo-card__period">{{ p.period }}</p>
+      </div>
+    </article>
+  </div>
+</section>

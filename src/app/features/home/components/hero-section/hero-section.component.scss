@@ -1,0 +1,116 @@
+.hero {
+  position: relative;
+  /* Full screen on first load across devices */
+  height: 100vh; /* fallback */
+  min-height: 100vh;
+  width: 100%;
+  color: #fff;
+  background-color: #0f5aa6; /* fallback color if images fail to load */
+  /* CSS media query fallback background images (in addition to <picture>) */
+  background-image: url('https://www.bca.co.id/homepage/assets/images/homepage/bg-desktop.jpg');
+  /* Shift image slightly downward and keep centered horizontally */
+  background-position: center 55%;
+  background-size: cover; /* fill area while preserving aspect ratio */
+  background-repeat: no-repeat;
+  overflow: hidden; /* prevent overflow glitches on small screens */
+
+  /* Adjustable overlay opacity using CSS variable */
+  --hero-overlay-alpha: 0.35; /* lighter overlay; customize transparency (0 - 1) */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1; /* above background image, below content */
+    background-color: rgba(0, 0, 0, 0.5); /* fallback for older browsers */
+    background-color: rgba(0, 0, 0, var(--hero-overlay-alpha));
+    pointer-events: none; /* overlay should not block interactions */
+  }
+
+  &__bg { position: absolute; inset: 0; z-index: 0; }
+  &__bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%; /* move focus slightly downward */
+    transform: scale(1.08); /* subtle zoom */
+    will-change: transform;
+    display: block;
+  }
+
+  &__overlay { position: absolute; inset: 0; display: grid; place-items: center; z-index: 2; }
+  &__overlay-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 16px;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  &__content-row {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  &__promo-card {
+    position: absolute;
+    left: 8%;
+    top: 36%;
+    width: clamp(260px, 28vw, 360px);
+    background: rgba(0,0,0,0.6);
+    border-radius: 8px;
+    padding: 16px;
+    color: #fff;
+  }
+  &__promo-title { font-weight: 600; font-size: 20px; margin-bottom: 8px; }
+  &__rate { font-size: 28px; font-weight: 700; }
+  &__desc { margin-top: 8px; }
+  &__dots { margin-top: 12px; letter-spacing: 6px; opacity: 0.7; }
+
+  &__kurs-card {
+    position: absolute;
+    left: 48%;
+    top: 36%;
+    width: clamp(220px, 24vw, 320px);
+    background: rgba(0,0,0,0.6);
+    border-radius: 8px;
+    padding: 16px;
+    color: #fff;
+  }
+  &__kurs-title { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
+  &__kurs-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+
+  &__search-card {
+    position: absolute;
+    left: 67%;
+    top: 22%;
+  }
+}
+
+/* Prefer dynamic viewport units where supported to truly fill visible area */
+@supports (height: 100dvh) {
+  .hero { height: 100dvh; min-height: 100dvh; }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    /* Keep full screen on mobile as well */
+    background-image: url('https://www.bca.co.id/homepage/assets/images/homepage/bg-mobile.jpg');
+    background-size: cover; /* mobile: fill while preserving aspect */
+    background-position: center 60%;
+    &__promo-card { left: 4%; top: 46%; width: 80%; }
+    &__kurs-card { display: none; }
+    &__search-card { left: auto; right: 4%; top: 12%; }
+  }
+
+  .hero__bg img {
+    object-position: 50% 60%;
+    transform: scale(1.1);
+  }
+
+  .hero__content-row { flex-direction: column; gap: 16px; }
+}

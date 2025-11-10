@@ -1,0 +1,33 @@
+<div class="hero-search" role="search" aria-label="Pencarian" [class.hero-search--expanded]="expanded">
+  <label class="visually-hidden" for="heroSearchInput">Cari</label>
+  <input
+    id="heroSearchInput"
+    class="hero-search__input"
+    type="search"
+    placeholder="Cari..."
+    [value]="query"
+    (input)="onInput($event)"
+    (keydown)="onKeyDown($event)"
+    aria-label="Masukkan kata kunci"
+  />
+  <button class="hero-search__btn" (click)="onPress()" aria-label="Buka panel pencarian">
+    <mat-icon>search</mat-icon>
+  </button>
+
+  <div class="hero-search__panel" [class.is-visible]="showResults" role="listbox" aria-label="Hasil pencarian dan populer">
+    <div class="hero-search__panel-title" *ngIf="results.length && results[0].title === 'PALING POPULER'">PALING POPULER</div>
+    <button
+      class="hero-search__panel-item"
+      *ngFor="let r of results; let i = index"
+      [class.is-title]="i === 0 && r.title === 'PALING POPULER'"
+      [class.is-active]="activeIndex === i"
+      [attr.role]="i === 0 ? 'presentation' : 'option'"
+      [disabled]="i === 0 && r.title === 'PALING POPULER'"
+      (click)="select(r)"
+    >
+      <span>{{ r.title }}</span>
+      <small class="hero-search__muted" *ngIf="r.desc">{{ r.desc }}</small>
+    </button>
+  </div>
+</div>
+

@@ -1,0 +1,109 @@
+.qs {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--qs-width, 200px); /* controlled via root CSS variable */
+  background: #0f5aa6; /* BCA-like blue */
+  color: #fff;
+  display: none;
+  z-index: 30;
+  transition: width 240ms ease;
+  /* Configurable animation variables */
+  --qs-scroll-duration: 360ms; /* recommended 300-500ms */
+  --qs-scroll-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.qs__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100vh; /* Fill viewport height for proportional sizing */
+  padding-top: 0; /* make it flush to the very top */
+  padding-bottom: 0;
+  align-items: stretch;
+  overflow-y: auto; /* allow scroll when content exceeds viewport */
+  scroll-behavior: smooth; /* smooth native scroll for programmatic jumps */
+  will-change: transform, opacity;
+}
+.qs__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1 1 0; /* each item takes equal share of available height */
+  color: #fff;
+  text-decoration: none;
+  padding: 0 20px; /* vertical size comes from flex proportion */
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+  min-height: 72px; /* ensure readability on short viewports */
+  transition: background-color 180ms ease, color 180ms ease;
+}
+.qs__item:hover { background: rgba(255,255,255,0.08); }
+.qs__item:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
+.qs__item mat-icon { font-size: 30px; }
+.qs__item span { font-size: 18px; }
+.qs__item:last-child { border-bottom: none; }
+
+/* Hover style: full white background with blue text/icon, matching reference */
+.qs__item:hover,
+.qs__item:focus-visible {
+  background: #fff;
+  color: #0f5aa6;
+  border-bottom-color: rgba(15, 90, 166, 0.25);
+}
+.qs__item:hover mat-icon,
+.qs__item:focus-visible mat-icon {
+  color: #0f5aa6;
+}
+
+@media (min-width: 992px) { .qs { display: block; } }
+
+/* Scroll animation states */
+.qs__nav.is-scrolling .qs__item {
+  transition: transform var(--qs-scroll-duration) var(--qs-scroll-ease),
+              opacity var(--qs-scroll-duration) var(--qs-scroll-ease);
+}
+.qs__nav.is-scrolling-down .qs__item {
+  transform: translateY(4px); /* subtle slide */
+  opacity: 0.96; /* slight fade */
+}
+.qs__nav.is-scrolling-up .qs__item {
+  transform: translateY(-4px);
+  opacity: 0.96;
+}
+
+/* Reset transforms when not scrolling */
+.qs__nav:not(.is-scrolling) .qs__item { transform: none; opacity: 1; }
+
+/* Compact mode: icon-only, text visually hidden without layout shift */
+.qs--compact .qs__item { justify-content: center; }
+.qs--compact .qs__item span {
+  position: absolute;
+  left: 100%;
+  width: 0; height: 0;
+  overflow: hidden; white-space: nowrap;
+  clip: rect(0 0 0 0); clip-path: inset(50%);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(8px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Reduced motion: disable transitions for users preferring less motion */
+@media (prefers-reduced-motion: reduce) {
+  .qs { transition: none; }
+  .qs__nav, .qs__item { transition: none !important; }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .qs__nav.is-scrolling .qs__item,
+  .qs__nav.is-scrolling-down .qs__item,
+  .qs__nav.is-scrolling-up .qs__item {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,37 @@
+<header class="header" role="banner" [class.header--sticky]="isSticky">
+  <a class="skip-link" href="#main-content">Lewati ke Konten</a>
+  <!-- Cookie note hidden per request -->
+  <!--
+  <div class="header__cookie" role="note" *ngIf="!isSticky">
+    Dengan mengakses situs ini, Anda telah menyetujui penggunaan cookie
+  </div>
+  -->
+  <div class="header__bar" aria-label="Top navigation">
+    <!-- Posisikan logo di dekat menu -->
+    <div class="header__center">
+      <a class="header__logo-link header__logo-link--inline" href="#" aria-label="Beranda">
+        <img class="header__logo header__logo--inline" src="https://pustaka.bca.co.id/public-assets/logo-bca-white.svg" alt="BCA" />
+      </a>
+      <nav class="header__nav header__nav--center" aria-label="Navigasi utama">
+        <ul class="header__menu" role="menubar">
+          <li role="none"><a role="menuitem" class="header__link" href="#" title="Individu">Individu</a></li>
+          <li role="none"><a role="menuitem" class="header__link" href="#" title="Bisnis">Bisnis</a></li>
+          <li role="none"><a role="menuitem" class="header__link" href="#" title="Tentang BCA">Tentang BCA</a></li>
+          <li role="none"><a role="menuitem" class="header__link" href="#" title="Karir">Karir</a></li>
+        </ul>
+      </nav>
+      <div class="header__actions" aria-label="Aksi penting">
+        <button class="header__icon" mat-icon-button aria-label="Cari">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button class="header__icon" mat-icon-button aria-label="Lokasi">
+          <mat-icon>location_on</mat-icon>
+        </button>
+        <div class="header__lang" role="group" aria-label="Bahasa">
+          <button class="lang-chip is-active" aria-pressed="true">ID</button>
+          <button class="lang-chip" aria-pressed="false">EN</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
