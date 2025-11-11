@@ -25,9 +25,9 @@
     <ng-container *ngIf="currencies.length > 0; else rateEmpty">
       <div class="hero-rate__currency" role="group" aria-label="Pilih mata uang">
         <button class="hero-rate__chev" (click)="prev()" aria-label="Sebelumnya">‹</button>
-        <span class="hero-rate__flag" *ngIf="selected.flagSrc">
+        <!-- <span class="hero-rate__flag" *ngIf="selected.flagSrc">
           <img [src]="selected.flagSrc" alt="" />
-        </span>
+        </span> -->
         <span class="hero-rate__code">{{ selected.code }}</span>
         <button class="hero-rate__chev" (click)="next()" aria-label="Berikutnya">›</button>
       </div>
