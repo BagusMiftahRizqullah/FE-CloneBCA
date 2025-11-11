@@ -1,27 +1,66 @@
-# BcaClone
+# BCA Clone Frontend (Angular)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.11.
+Frontend ini meniru tampilan homepage BCA dan terhubung ke backend untuk mengambil data promo, berita, kurs, dan carousel.
 
-## Development server
+## Teknologi
+- Angular 15 (CLI)
+- RxJS
+- SCSS
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Menjalankan Secara Lokal
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Jalankan dev server:
+   ```bash
+   npm start
+   ```
+   Aplikasi akan tersedia di `http://localhost:3000/`.
 
-## Code scaffolding
+> Catatan: Proyek ini dikonfigurasi untuk menggunakan port 3000 saat pengembangan.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Integrasi Backend
+Frontend mengonsumsi API dari backend pada endpoint:
+- `/api/promos`, `/api/news`, `/api/rates`, `/api/carousel`
 
-## Build
+Konfigurasi base URL API berada di:
+```
+src/app/core/services/api.config.ts
+```
+Pastikan backend aktif di `http://localhost:4000/` atau sesuaikan konfigurasi tersebut.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Fitur yang Ada
+- Hero Carousel: menampilkan slide promo dan skeleton saat loading.
+- Promo Section: daftar promo dengan skeleton saat loading dan empty-state saat data kosong.
+- News Section: featured news + list, skeleton saat loading, empty-state jika tidak ada data.
+- Hero Rate Card: kurs eRate, skeleton saat loading, empty-state bila kosong.
+- Hero Search: panel pencarian dengan skeleton saat mencari, empty-state jika tidak ada hasil.
 
-## Running unit tests
+## Struktur Direktori
+```
+bca-clone/
+├── src/
+│   ├── app/
+│   │   ├── core/            # services, models, config API
+│   │   ├── shared/          # komponen dan util bersama
+│   │   └── features/
+│   │       └── home/        # halaman utama dan komponennya
+│   ├── assets/
+│   ├── index.html
+│   └── styles.scss
+└── package.json
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Build & Testing
+- Build: `npm run build`
+- Unit test: `npm test`
 
-## Running end-to-end tests
+## Saran Pengembangan
+- Tambahkan e2e test (Cypress/Playwright) untuk smoke test UI utama.
+- Pertimbangkan menambahkan state management jika kebutuhan makin kompleks.
+- Gunakan environment Angular untuk membedakan `api.baseUrl` dev/prod.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Troubleshooting
+- Jika data tidak muncul, pastikan backend aktif dan `api.config.ts` mengarah ke URL yang benar.
+- Periksa error di browser console dan terminal dev server untuk petunjuk.
