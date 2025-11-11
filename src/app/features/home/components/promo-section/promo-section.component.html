@@ -5,14 +5,35 @@
   </div>
 
   <div class="promo__grid">
-    <article class="promo-card" *ngFor="let p of promos; let i = index" [style.animationDelay]="(i * 60) + 'ms'">
-      <div class="promo-card__media">
-        <img [src]="p.img" [alt]="p.title" loading="lazy" decoding="async" />
-      </div>
-      <div class="promo-card__body">
-        <h3 class="promo-card__title">{{ p.title }}</h3>
-        <p class="promo-card__period">{{ p.period }}</p>
-      </div>
-    </article>
+    <!-- Loading skeletons -->
+    <ng-container *ngIf="isLoading; else promoContent">
+      <article class="promo-card" *ngFor="let s of [0,1,2,3]">
+        <div class="promo-card__media">
+          <div class="skeleton skeleton--img"></div>
+        </div>
+        <div class="promo-card__body">
+          <div class="skeleton skeleton--text" style="width: 80%"></div>
+          <div class="skeleton skeleton--text" style="width: 60%"></div>
+        </div>
+      </article>
+    </ng-container>
+
+    <ng-template #promoContent>
+      <ng-container *ngIf="promos.length > 0; else promoEmpty">
+        <article class="promo-card" *ngFor="let p of promos; let i = index" [style.animationDelay]="(i * 60) + 'ms'">
+          <div class="promo-card__media">
+            <img [src]="p.img" [alt]="p.title" loading="lazy" decoding="async" />
+          </div>
+          <div class="promo-card__body">
+            <h3 class="promo-card__title">{{ p.title }}</h3>
+            <p class="promo-card__period">{{ p.period }}</p>
+          </div>
+        </article>
+      </ng-container>
+    </ng-template>
   </div>
+
+  <ng-template #promoEmpty>
+    <p class="promo__empty">No promos available right now.</p>
+  </ng-template>
 </section>

@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, ChangeDetectorRef, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { CarouselService } from '../../../../core/services/carousel.service';
+import { CarouselItem } from '../../../../core/services/models';
 
 interface Slide {
   src: string;
@@ -14,41 +16,64 @@ interface Slide {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeroCarouselComponent implements OnInit, OnDestroy {
-  slides: Slide[] = [
-    {
-      src: 'https://www.bca.co.id/-/media/Feature/Card/Main-Banner-Card/Personal/20251001-gebyar-1.jpeg',
-      alt: 'Gebyar Hadiah BCA 1',
-    },
-    {
-      src: 'https://www.bca.co.id/-/media/Feature/Card/Main-Banner-Card/Personal/20251001-gebyar-2.jpeg',
-      alt: 'Gebyar Hadiah BCA 2',
-    },
-    {
-      src: 'https://www.bca.co.id/-/media/Feature/Card/Main-Banner-Card/Personal/20251104-KPR-Berjenjang-Nov-2025.png',
-      alt: 'KPR Berjenjang Nov 2025',
-    },
-  ];
+  slides: Slide[] = [];
+  isLoading = true;
 
   index = 0;
   private autoplayId?: any;
   private autoplayMs = 3000; // auto swipe setiap 3 detik
 
-  constructor(private cdr: ChangeDetectorRef, private zone: NgZone) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone,
+    private carouselService: CarouselService,
+  ) {}
 
   ngOnInit(): void {
-    this.startAutoplay();
+    // Ambil data carousel dari backend
+    this.carouselService.getCarousel().subscribe({
+      next: (items: CarouselItem[]) => {
+        this.slides = (items || []).map(i => ({
+          src: i.imageUrl,
+          alt: i.title || 'Slide',
+          title: i.title,
+          subtitle: undefined,
+        }));
+        // Mulai autoplay hanya jika ada slides
+        if (this.slides.length > 0) {
+          this.startAutoplay();
+        }
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        // Jika gagal, biarkan tanpa autoplay agar tidak modulo 0
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 
   ngOnDestroy(): void {
     this.stopAutoplay();
   }
 
-  prev() { this.index = (this.index - 1 + this.slides.length) % this.slides.length; }
-  next() { this.index = (this.index + 1) % this.slides.length; }
-  go(i: number) { this.index = i % this.slides.length; }
+  prev() {
+    if (!this.slides.length) return;
+    this.index = (this.index - 1 + this.slides.length) % this.slides.length;
+  }
+  next() {
+    if (!this.slides.length) return;
+    this.index = (this.index + 1) % this.slides.length;
+  }
+  go(i: number) {
+    if (!this.slides.length) return;
+    this.index = i % this.slides.length;
+  }
 
   private startAutoplay() {
     this.stopAutoplay();
+    if (!this.slides.length) return;
     this.autoplayId = setInterval(() => {
       // Pastikan perubahan state dijalankan dalam Angular zone agar OnPush ter-update
       this.zone.run(() => {

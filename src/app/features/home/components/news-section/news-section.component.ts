@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { NewsService } from '../../../../core/services/news.service';
+import { NewsItem as NewsModel } from '../../../../core/services/models';
 
 interface NewsItem {
   title: string;
@@ -13,26 +15,54 @@ interface NewsItem {
   styleUrls: ['./news-section.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewsSectionComponent {
+export class NewsSectionComponent implements OnInit {
   tabs = ['News & Features', 'Edukatips', '#AwasModus'];
   activeTab = this.tabs[0];
 
   // Use same image across all cards per user instruction
   readonly defaultImg = 'https://www.bca.co.id/-/media/Feature/Card/Main-Banner-Card/Personal/20251104-KPR-Berjenjang-Nov-2025.png';
 
-  featured: NewsItem = {
-    title: 'Telah Hadir, Batavia USD Money Market, Reksa Dana Pasar Uang USD di BCA',
-    date: '7 Nov 2025 | Berita',
-    img: this.defaultImg,
-    href: '#',
-  };
+  featured: NewsItem | null = null;
+  items: NewsItem[] = [];
+  isLoading = true;
 
-  items: NewsItem[] = [
-    { title: 'Pemberitahuan Penyesuaian Limit Nominal Transaksi', date: '21 Okt 2025 | Berita', img: this.defaultImg, href: '#' },
-    { title: 'BCA Raih Predikat "Marketer of the Year" Tiga Tahun…', date: '22 Okt 2025 | Berita', img: this.defaultImg, href: '#' },
-    { title: 'Pemberitahuan terkait Rencana Penggantian Bank…', date: '28 Okt 2025 | Berita', img: this.defaultImg, href: '#' },
-    { title: 'Penutupan Layanan Operasional dan…', date: '4 Feb 2025 | Berita', img: this.defaultImg, href: '#' },
-    { title: 'Temukan Lebih Banyak Pilihan Paket Data…', date: '8 Okt 2025 | Berita', img: this.defaultImg, href: '#' },
-    { title: 'Dapatkan Paket Data XL dan AXIS Sesuai Kebutuhan…', date: '3 Okt 2025 | Berita', img: this.defaultImg, href: '#' },
-  ];
+  constructor(private newsService: NewsService, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.newsService.getNews({ featured: true, limit: 7 }).subscribe({
+      next: (items: NewsModel[]) => {
+        const mapped = (items || []).map(i => this.mapNews(i));
+        if (mapped.length) {
+          this.featured = mapped[0];
+          this.items = mapped.slice(1);
+        } else {
+          this.featured = null;
+          this.items = [];
+        }
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  private mapNews(i: NewsModel): NewsItem {
+    const category = i.category || 'Berita';
+    const dateStr = this.formatDate(i.date) + ' | ' + category;
+    return {
+      title: i.title,
+      date: dateStr,
+      img: i.imageUrl || this.defaultImg,
+      href: i.url || '#',
+    };
+  }
+
+  private formatDate(iso?: string): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
 }

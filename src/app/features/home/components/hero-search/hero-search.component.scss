@@ -105,5 +105,13 @@
 .hero-search__panel-item.is-title { cursor: default; }
 .hero-search__panel-item.is-active { background: rgba(255,255,255,0.06); }
 
+/* Skeleton styles for dark panel */
+.skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.15) 25%, rgba(255,255,255,0.3) 37%, rgba(255,255,255,0.15) 63%); background-size: 400% 100%; animation: search-shimmer 1.2s ease-in-out infinite; border-radius: 8px; }
+.skeleton--text { height: 14px; margin: 6px 0; }
+
+@keyframes search-shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+.hero-search__empty { padding: 12px 16px; opacity: 0.85; font-style: italic; }
+
 /* tidak perlu keyframes lagi karena transisi ditangani via transition */
 

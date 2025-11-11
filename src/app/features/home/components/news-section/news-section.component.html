@@ -20,28 +20,61 @@
   </div>
 
   <div class="news__grid" role="list">
-    <article class="news-card news-card--featured" role="listitem">
-      <a class="news-card__link" [href]="featured.href" [attr.aria-label]="featured.title">
+    <!-- Loading skeletons -->
+    <ng-container *ngIf="isLoading; else newsContent">
+      <article class="news-card news-card--featured" role="listitem">
         <div class="news-card__media">
-          <img [src]="featured.img" alt="" loading="lazy" decoding="async" />
+          <div class="skeleton skeleton--img"></div>
         </div>
         <div class="news-card__meta">
-          <span class="news-card__date">{{ featured.date }}</span>
+          <div class="skeleton skeleton--text" style="width: 40%"></div>
         </div>
-        <h3 class="news-card__title">{{ featured.title }}</h3>
-      </a>
-    </article>
+        <div class="news-card__title">
+          <div class="skeleton skeleton--text" style="width: 70%"></div>
+        </div>
+      </article>
 
-    <article class="news-card" role="listitem" *ngFor="let item of items">
-      <a class="news-card__link" [href]="item.href" [attr.aria-label]="item.title">
+      <article class="news-card" role="listitem" *ngFor="let s of [0,1,2,3,4,5]">
         <div class="news-card__media news-card__media--sm">
-          <img [src]="item.img" alt="" loading="lazy" decoding="async" />
+          <div class="skeleton skeleton--img"></div>
         </div>
         <div class="news-card__content">
-          <span class="news-card__date">{{ item.date }}</span>
-          <h3 class="news-card__title news-card__title--sm">{{ item.title }}</h3>
+          <div class="skeleton skeleton--text" style="width: 50%"></div>
+          <div class="skeleton skeleton--text" style="width: 80%"></div>
         </div>
-      </a>
-    </article>
+      </article>
+    </ng-container>
+
+    <ng-template #newsContent>
+      <ng-container *ngIf="featured as f; else newsEmpty">
+        <article class="news-card news-card--featured" role="listitem">
+          <a class="news-card__link" [href]="f.href" [attr.aria-label]="f.title">
+            <div class="news-card__media">
+              <img [src]="f.img" alt="" loading="lazy" decoding="async" />
+            </div>
+            <div class="news-card__meta">
+              <span class="news-card__date">{{ f.date }}</span>
+            </div>
+            <h3 class="news-card__title">{{ f.title }}</h3>
+          </a>
+        </article>
+
+        <article class="news-card" role="listitem" *ngFor="let item of items">
+          <a class="news-card__link" [href]="item.href" [attr.aria-label]="item.title">
+            <div class="news-card__media news-card__media--sm">
+              <img [src]="item.img" alt="" loading="lazy" decoding="async" />
+            </div>
+            <div class="news-card__content">
+              <span class="news-card__date">{{ item.date }}</span>
+              <h3 class="news-card__title news-card__title--sm">{{ item.title }}</h3>
+            </div>
+          </a>
+        </article>
+      </ng-container>
+    </ng-template>
   </div>
+
+  <ng-template #newsEmpty>
+    <p class="news__empty">No news available.</p>
+  </ng-template>
 </section>

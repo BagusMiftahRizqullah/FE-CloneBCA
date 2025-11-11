@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { RatesService } from '../../../../core/services/rates.service';
+import { RateItem } from '../../../../core/services/models';
 
 interface CurrencyRate {
   code: string;
@@ -13,21 +15,49 @@ interface CurrencyRate {
   styleUrls: ['./hero-rate-card.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeroRateCardComponent {
-  currencies: CurrencyRate[] = [
-    { code: 'EUR', buy: 19255.41, sell: 19269.47, flagSrc: 'https://flagcdn.com/w40/eu.png' },
-    { code: 'USD', buy: 15500.12, sell: 15520.89, flagSrc: 'https://flagcdn.com/w40/us.png' },
-    { code: 'SGD', buy: 5248.00, sell: 5418.00, flagSrc: 'https://flagcdn.com/w40/sg.png' },
-  ];
+export class HeroRateCardComponent implements OnInit {
+  currencies: CurrencyRate[] = [];
+  isLoading = true;
 
   index = 0;
 
-  get selected(): CurrencyRate { return this.currencies[this.index]; }
+  get selected(): CurrencyRate {
+    return this.currencies.length ? this.currencies[this.index] : { code: '', buy: 0, sell: 0 };
+  }
 
-  prev() { this.index = (this.index - 1 + this.currencies.length) % this.currencies.length; }
-  next() { this.index = (this.index + 1) % this.currencies.length; }
+  prev() {
+    if (!this.currencies.length) return;
+    this.index = (this.index - 1 + this.currencies.length) % this.currencies.length;
+  }
+  next() {
+    if (!this.currencies.length) return;
+    this.index = (this.index + 1) % this.currencies.length;
+  }
 
   format(n: number): string {
     return new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+  }
+
+  constructor(private ratesService: RatesService, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.ratesService.getRates().subscribe({
+      next: (items: RateItem[]) => {
+        this.currencies = (items || []).map(i => ({
+          code: i.code,
+          buy: i.buy,
+          sell: i.sell,
+          flagSrc: i.flagSrc,
+        }));
+        // Ensure index is valid
+        this.index = this.currencies.length ? 0 : -1 as any;
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+    });
   }
 }

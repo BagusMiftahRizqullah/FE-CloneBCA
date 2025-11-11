@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output, ElementRef, HostListener } from '@angular/core';
+import { SearchService, SearchResult } from '../../../../core/services/search.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-hero-search',
@@ -10,12 +12,14 @@ export class HeroSearchComponent {
   query = '';
   results: { title: string; desc?: string }[] = [];
   showResults = false;
+  isLoading = false;
   private debounceHandle: any;
   expanded = false; // state untuk tampilan baru (panel populer)
   activeIndex = -1; // untuk navigasi keyboard
 
   // Demo dataset agar bisa diuji langsung
-  private data = [
+  // Fallback demo dataset jika backend belum tersedia
+  private demo = [
     { title: 'Buka Rekening Tahapan', desc: 'Pembukaan rekening baru' },
     { title: 'KPR BCA', desc: 'Kredit Pemilikan Rumah' },
     { title: 'Kartu Kredit', desc: 'Produk kartu kredit BCA' },
@@ -26,7 +30,7 @@ export class HeroSearchComponent {
 
   @Output() search = new EventEmitter<string>();
 
-  constructor(private el: ElementRef<HTMLElement>) {}
+  constructor(private el: ElementRef<HTMLElement>, private searchService: SearchService, private cdr: ChangeDetectorRef) {}
 
   onInput(ev: Event) {
     const target = ev.target as HTMLInputElement;
@@ -95,10 +99,42 @@ export class HeroSearchComponent {
   }
 
   private filter() {
-    const q = (this.query || '').toLowerCase().trim();
-    if (!q) { this.results = []; this.showResults = false; return; }
-    this.results = this.data.filter(d => (d.title + ' ' + (d.desc || '')).toLowerCase().includes(q)).slice(0, 6);
-    this.showResults = true;
+    const q = (this.query || '').trim();
+    if (!q) { this.results = []; this.showResults = false; this.isLoading = false; return; }
+    this.isLoading = true;
+    this.showResults = true; // tampilkan panel selama loading
+    this.searchService.search(q).subscribe({
+      next: (res: SearchResult) => {
+        const combined: { title: string; desc?: string }[] = [];
+        // Prioritize news results
+        for (const n of (res.news || []).slice(0, 4)) {
+          combined.push({ title: n.title, desc: n.category ? `Berita • ${n.category}` : 'Berita' });
+        }
+        // Then promos
+        for (const p of (res.promos || []).slice(0, 2)) {
+          combined.push({ title: p.title, desc: 'Promo' });
+        }
+        // Fallback to links if little content
+        if (combined.length < 3) {
+          for (const l of (res.links || []).slice(0, 3)) {
+            combined.push({ title: l.title, desc: 'Link' });
+          }
+        }
+
+        this.results = combined.length ? combined : this.demo.filter(d => (d.title + ' ' + (d.desc || '')).toLowerCase().includes(q.toLowerCase())).slice(0, 6);
+        this.isLoading = false;
+        this.showResults = !!this.results.length;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        // On error, use demo filter
+        const low = q.toLowerCase();
+        this.results = this.demo.filter(d => (d.title + ' ' + (d.desc || '')).toLowerCase().includes(low)).slice(0, 6);
+        this.isLoading = false;
+        this.showResults = !!this.results.length;
+        this.cdr.markForCheck();
+      },
+    });
   }
 }
 

@@ -1,26 +1,54 @@
 <section class="hero-rate" aria-label="Kurs eRate BCA">
   <h3 class="hero-rate__title">Kurs eRate<br />BCA</h3>
 
-  <div class="hero-rate__currency" role="group" aria-label="Pilih mata uang">
-    <button class="hero-rate__chev" (click)="prev()" aria-label="Sebelumnya">‹</button>
-    <span class="hero-rate__flag" *ngIf="selected.flagSrc">
-      <img [src]="selected.flagSrc" alt="" />
-    </span>
-    <span class="hero-rate__code">{{ selected.code }}</span>
-    <button class="hero-rate__chev" (click)="next()" aria-label="Berikutnya">›</button>
-  </div>
+  <!-- Loading skeleton -->
+  <ng-container *ngIf="isLoading; else rateContent">
+    <div class="hero-rate__currency" role="group" aria-label="Pilih mata uang">
+      <div class="skeleton skeleton--chev"></div>
+      <div class="skeleton skeleton--flag"></div>
+      <div class="skeleton skeleton--text" style="width: 60px"></div>
+      <div class="skeleton skeleton--chev"></div>
+    </div>
+    <div class="hero-rate__row">
+      <div class="skeleton skeleton--text" style="width: 40px"></div>
+      <div class="skeleton skeleton--text" style="width: 80px"></div>
+    </div>
+    <div class="hero-rate__divider" aria-hidden="true"></div>
+    <div class="hero-rate__row">
+      <div class="skeleton skeleton--text" style="width: 40px"></div>
+      <div class="skeleton skeleton--text" style="width: 80px"></div>
+    </div>
+    <div class="skeleton skeleton--text" style="width: 70%"></div>
+  </ng-container>
 
-  <div class="hero-rate__row">
-    <span class="hero-rate__label">Beli</span>
-    <span class="hero-rate__value">{{ format(selected.buy) }}</span>
-  </div>
+  <ng-template #rateContent>
+    <ng-container *ngIf="currencies.length > 0; else rateEmpty">
+      <div class="hero-rate__currency" role="group" aria-label="Pilih mata uang">
+        <button class="hero-rate__chev" (click)="prev()" aria-label="Sebelumnya">‹</button>
+        <span class="hero-rate__flag" *ngIf="selected.flagSrc">
+          <img [src]="selected.flagSrc" alt="" />
+        </span>
+        <span class="hero-rate__code">{{ selected.code }}</span>
+        <button class="hero-rate__chev" (click)="next()" aria-label="Berikutnya">›</button>
+      </div>
 
-  <div class="hero-rate__divider" aria-hidden="true"></div>
+      <div class="hero-rate__row">
+        <span class="hero-rate__label">Beli</span>
+        <span class="hero-rate__value">{{ format(selected.buy) }}</span>
+      </div>
 
-  <div class="hero-rate__row">
-    <span class="hero-rate__label">Jual</span>
-    <span class="hero-rate__value">{{ format(selected.sell) }}</span>
-  </div>
+      <div class="hero-rate__divider" aria-hidden="true"></div>
 
-  <p class="hero-rate__note">Kurs dapat berubah selama proses transaksi.</p>
+      <div class="hero-rate__row">
+        <span class="hero-rate__label">Jual</span>
+        <span class="hero-rate__value">{{ format(selected.sell) }}</span>
+      </div>
+
+      <p class="hero-rate__note">Kurs dapat berubah selama proses transaksi.</p>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #rateEmpty>
+    <p class="hero-rate__empty">Tidak ada data kurs saat ini.</p>
+  </ng-template>
 </section>

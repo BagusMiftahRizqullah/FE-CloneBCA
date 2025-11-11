@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { PromoService } from '../../../../core/services/promo.service';
+import { PromoItem as PromoModel } from '../../../../core/services/models';
 
 interface PromoItem {
   title: string;
@@ -12,31 +14,42 @@ interface PromoItem {
   styleUrls: ['./promo-section.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PromoSectionComponent {
+export class PromoSectionComponent implements OnInit {
   heading = 'Promo Terbaru';
   ctaLabel = 'Lihat Semua Promo';
   ctaHref = '#';
+  promos: PromoItem[] = [];
+  isLoading = true;
 
-  promos: PromoItem[] = [
-    {
-      title: 'Electronic City - Diskon Hingga Rp1.000.000',
-      img: 'https://pustaka.bca.co.id/Promo/A2C31A68-BC10-4CBD-AB51-85474A36CC50/Detail/ImageListing/20251110_Eci-Gading-Serpong-Thumb.jpg',
-      period: 'Periode 09 Nov 2025 - 15 Nov 2025',
-    },
-    {
-      title: 'BCA Travel Service - Potongan Rp2 Juta',
-      img: 'https://pustaka.bca.co.id/Promo/A2C31A68-BC10-4CBD-AB51-85474A36CC50/Detail/ImageCover/20251110_bca-travel-service-bann.jpg?v=10112025114546',
-      period: 'Periode 31 Jan 2026',
-    },
-    {
-      title: 'HONOR Experience Store Emporium Pluit…',
-      img: 'https://pustaka.bca.co.id/Promo/A2C31A68-BC10-4CBD-AB51-85474A36CC50/Detail/ImageCover/20251107_Honor_Web%20Insertion%20980x350%20H.jpg?v=10112025124233',
-      period: 'Periode 08 Nov 2025 - 16 Nov 2025',
-    },
-    {
-      title: 'Atria - Harga Spesial',
-      img: 'https://pustaka.bca.co.id/Promo/A2C31A68-BC10-4CBD-AB51-85474A36CC50/Detail/ImageCover/20251110_Atria-banner.jpg?v=10112025124327',
-      period: 'Periode 10 Nov 2025 - 24 Nov 2025',
-    },
-  ];
+  constructor(private promoService: PromoService, private cdr: ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.promoService.getPromos().subscribe({
+      next: (items: PromoModel[]) => {
+        this.promos = (items || []).map(i => ({
+          title: i.title,
+          img: i.imageUrl,
+          period: this.formatPeriod(i.periodFrom, i.periodTo),
+        }));
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  private formatPeriod(fromIso: string, toIso: string): string {
+    const fmt = (d?: string) => d ? new Date(d) : undefined;
+    const from = fmt(fromIso);
+    const to = fmt(toIso);
+    const opts: Intl.DateTimeFormatOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+    const id = 'id-ID';
+    if (from && to) return `Periode ${from.toLocaleDateString(id, opts)} - ${to.toLocaleDateString(id, opts)}`;
+    if (from && !to) return `Periode ${from.toLocaleDateString(id, opts)}`;
+    if (!from && to) return `Sampai ${to.toLocaleDateString(id, opts)}`;
+    return '';
+  }
 }
