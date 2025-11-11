@@ -1,3 +1,4 @@
+/*
 # BCA Clone Frontend (Angular)
 
 Frontend ini meniru tampilan homepage BCA dan terhubung ke backend untuk mengambil data promo, berita, kurs, dan carousel.
@@ -26,9 +27,10 @@ Frontend mengonsumsi API dari backend pada endpoint:
 
 Konfigurasi base URL API berada di:
 ```
+*/
 src/app/core/services/api.config.ts
 ```
-Pastikan backend aktif di `http://localhost:4000/` atau sesuaikan konfigurasi tersebut.
+Pastikan backend aktif di `http://localhost:3002/` atau sesuaikan konfigurasi tersebut.
 
 ## Fitur yang Ada
 - Hero Carousel: menampilkan slide promo dan skeleton saat loading.
